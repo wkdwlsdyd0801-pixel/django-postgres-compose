@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>django-postgres-compose</title>
+</head>
+<body>
+  <h1>Django + PostgreSQL via Docker Compose</h1>
+  <!-- `total` comes from Postgres; it keeps counting across restarts because
+       the database lives on a named volume. -->
+  <p>Visits stored in Postgres: <strong>{{ total }}</strong></p>
+  <p><a href="/visit/">Record a visit</a> &middot; <a href="/healthz">/healthz</a></p>
+</body>
+</html>

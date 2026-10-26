@@ -1,0 +1,15 @@
+# Secrets and local config
+.env
+
+# Collected static files
+staticfiles/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/

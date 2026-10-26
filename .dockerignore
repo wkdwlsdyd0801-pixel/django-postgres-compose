@@ -1,0 +1,12 @@
+# Keep the build context small and secret-free.
+.git
+.gitignore
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+staticfiles/
+README.md

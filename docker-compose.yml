@@ -1,0 +1,38 @@
+# App + PostgreSQL wired together. The database's data directory lives on a
+# named volume (pg-data), so stopping and recreating the containers keeps the
+# data. The web service waits for Postgres to be healthy before it starts.
+services:
+  db:
+    image: postgres:16-alpine
+    # Postgres reads these on first start to create the database and user.
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # The named volume holds /var/lib/postgresql/data -> this is what makes the
+    # data survive `docker compose down` and container recreation.
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    # pg_isready marks the container healthy only once it actually accepts
+    # connections, which is what the web service's depends_on waits on.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build: .
+    env_file:
+      - .env            # copy .env.example to .env and fill in values
+    environment:
+      POSTGRES_HOST: db # Docker's internal DNS resolves this to the db service
+      POSTGRES_PORT: "5432"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pg-data:
